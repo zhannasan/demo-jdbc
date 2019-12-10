@@ -45,6 +45,7 @@ public class TestConnexionJdbc {
 			}
 
 			Class.forName(driver);
+			//Class.forName(driver, true, this.getClass().getClassLoader())
 			Connection connection = DriverManager.getConnection(url, user, password);
 			System.out.println("\r"+connection.getCatalog());
 			connection.close();
@@ -66,6 +67,7 @@ public class TestConnexionJdbc {
 			Class.forName(driver);
 			Connection connection = DriverManager.getConnection(url, user, password);
 			System.out.println("\r"+connection.getCatalog());
+			
 			connection.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -76,5 +78,8 @@ public class TestConnexionJdbc {
 		
 		
 	}
+	
+
+	
 
 }
