@@ -19,7 +19,7 @@ public class TestConnexionJdbc {
 		 * System.out.println(connection.getCatalog()); connection.close(); }
 		 * catch (SQLException e) { throw new
 		 * RuntimeException("Could not register driver", e); }
-		 */
+		 
 
 		try {
 			ResourceBundle myConfig = ResourceBundle.getBundle("demo-jdbc");
@@ -54,7 +54,27 @@ public class TestConnexionJdbc {
 		} catch (ClassNotFoundException e) {
 			e.getStackTrace();
 		}
+*/
+		try {
+			ResourceBundle myConfig = ResourceBundle.getBundle("demo-jdbc");
+			String driver = myConfig.getString("MYSQL_ADDON_DB");
+			String url = myConfig.getString("MYSQL_ADDON_URL");
+			String user = myConfig.getString("MYSQL_ADDON_USER");
+			String password = myConfig.getString("MYSQL_ADDON_PASSWORD");
+			
 
+			Class.forName(driver);
+			Connection connection = DriverManager.getConnection(url, user, password);
+			System.out.println("\r"+connection.getCatalog());
+			connection.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+		} catch (ClassNotFoundException e) {
+			e.getStackTrace();
+		}
+		
+		
 	}
 
 }
