@@ -83,13 +83,12 @@ public class FournisseurDaoJdbc implements FournisseurDao {
 	
 	public boolean exists(String nomFournisseur) {
 		boolean exist = false;
-		//TODO
 		try {
 			cursor = statement.executeQuery("SELECT ID, Nom FROM fournisseur");
 			while (cursor.next()) {
 				int id = cursor.getInt("ID");
 				String nom = cursor.getString("Nom");
-				if (nom.equalsIgnoreCase(nomFournisseur)) {
+				if (nom.equals(nomFournisseur)) {
 					exist = true;
 				} else {
 					exist = false;
@@ -155,8 +154,8 @@ public class FournisseurDaoJdbc implements FournisseurDao {
 	public void updatePrep(String ancienNom, String nouveauNom) {
 		try {
 			PreparedStatement insertStatement = connection.prepareStatement("UPDATE fournisseur SET Nom =? WHERE Nom=?");
-			insertStatement.setString (1, ancienNom);
-			insertStatement.setString (2, nouveauNom);
+			insertStatement.setString (1, nouveauNom);
+			insertStatement.setString (2, ancienNom);
 			insertStatement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();

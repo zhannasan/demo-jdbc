@@ -18,8 +18,8 @@ public class TestInsertion {
 
 	public static void main(String[] args) {
 			FournisseurDaoJdbc dao = new FournisseurDaoJdbc();
-			List<Fournisseur> fourn = dao.extraire();
-			dao.insert(5, "L''Espace  Création");
+			if(dao.exists("L'Espace Création")==false){
+				dao.insert(5, "L'Espace Création");}
 			List<Fournisseur> four = dao.extraire();
 			dao.close();
 	}

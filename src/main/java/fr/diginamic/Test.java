@@ -3,14 +3,17 @@ package fr.diginamic;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.util.Enumeration;
+import java.util.List;
 
 import fr.diginamic.entites.Fournisseur;
+import fr.diginamic.jdbc.dao.FournisseurDaoJdbc;
 
 public class Test {
 
 	public static void main(String[] args) {
-		Fournisseur fournisseur = new Fournisseur(4,"Maison de la Peinture");
-		System.out.println("L’Espace C"+"'"+"réation");
+		FournisseurDaoJdbc dao = new FournisseurDaoJdbc();
+		List<Fournisseur> fourn = dao.extraire();
+		System.out.println(dao.exists("Maison des Peintures"));
 		/*Enumeration<Driver> loadedDrivers = DriverManager.getDrivers();
 	    
 	    while(loadedDrivers.hasMoreElements()){     

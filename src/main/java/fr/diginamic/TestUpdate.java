@@ -15,8 +15,11 @@ public class TestUpdate {
 
 	public static void main(String[] args) {
 		FournisseurDaoJdbc dao = new FournisseurDaoJdbc();
-		dao.updatePrep("Maison des Peintures","Maison de la Peinture");
-		List<Fournisseur> fourn = dao.extraire();
+		if(dao.exists("Maison de la Peinture")==true){
+			//dao.updatePrep( "Maison des Peintures", "Maison de la Peinture");
+			dao.update( "Maison des Peintures", "Maison de la Peinture");
+		}
+		List<Fournisseur> fourn2 = dao.extraire();
 		dao.close();
 
 	}
