@@ -18,9 +18,9 @@ public class TestInsertion {
 
 	public static void main(String[] args) {
 			FournisseurDaoJdbc dao = new FournisseurDaoJdbc();
-			dao.insert(new Fournisseur(5, "L’Espace  Création"));
-			dao.insert(new Fournisseur(6, "L''Espace  Création"));
 			List<Fournisseur> fourn = dao.extraire();
+			dao.insert(5, "L''Espace  Création");
+			List<Fournisseur> four = dao.extraire();
 			dao.close();
 	}
 

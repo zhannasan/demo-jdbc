@@ -1,6 +1,7 @@
 package fr.diginamic.jdbc.dao;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -15,8 +16,8 @@ public class FournisseurDaoJdbc implements FournisseurDao {
 	private static Statement statement;
 	private static Connection connection;
 	private static ResultSet cursor;
-	
-	/**
+
+	/**établissement de la connexion et création statement
 	* 
 	*/
 	public FournisseurDaoJdbc() {
@@ -49,8 +50,6 @@ public class FournisseurDaoJdbc implements FournisseurDao {
 
 	public void insert(Fournisseur fournisseur) {
 		try {
-			System.out.println("INSERT INTO fournisseur (ID, Nom) values (" + fournisseur.getId() + ", '"
-					+ fournisseur.getNom() + "')");
 			statement.executeUpdate("INSERT INTO fournisseur (ID, Nom) values (" + fournisseur.getId() + ", '"
 					+ fournisseur.getNom() + "')");
 			connection.commit();
@@ -77,29 +76,31 @@ public class FournisseurDaoJdbc implements FournisseurDao {
 			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
-		
 		}
 		return false;
 	}
+
 	
-	/*public boolean exists(String nomFournisseur){
+	public boolean exists(String nomFournisseur) {
 		boolean exist = false;
+		//TODO
 		try {
 			cursor = statement.executeQuery("SELECT ID, Nom FROM fournisseur");
 			while (cursor.next()) {
 				int id = cursor.getInt("ID");
 				String nom = cursor.getString("Nom");
-				if(nom.equalsIgnoreCase(nomFournisseur)){
-					exist=true;
-				}else{
-					exist=false;
+				if (nom.equalsIgnoreCase(nomFournisseur)) {
+					exist = true;
+				} else {
+					exist = false;
 				}
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return exist;
-	}*/
+	}
+	 
 
 	public static void close() {
 		try {
@@ -114,4 +115,53 @@ public class FournisseurDaoJdbc implements FournisseurDao {
 			e.printStackTrace();
 		}
 	}
+
+	/** UPDATE avec PreparedStatement
+	 * @param id ID de fournisseur à 
+	 * @param nom Nom de fournisseur à inserer
+	 */
+	public void insert(int id, String nom) {
+		try {
+			PreparedStatement insertStatement = connection.prepareStatement("INSERT INTO fournisseur (ID, Nom) values (?, ?)");
+			insertStatement.setInt(1, id);
+			insertStatement.setString (2, nom);
+			insertStatement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/** DELETE avec PreparedStatement
+	 * @param nom Nom de fournisseur à effacer
+	 * @return boolean true si effacé
+	 */
+	public boolean delete(String nom) {
+		boolean deleted = false;
+		try {
+			PreparedStatement insertStatement = connection.prepareStatement("DELETE FROM fournisseur WHERE Nom = ?");
+			insertStatement.setString (1, nom);
+			insertStatement.executeUpdate();
+			deleted=true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return deleted;
+	}
+	
+	/** UPDATE  avec PreparedStatement
+	 * @param ancienNom ancien nom de fournisseur
+	 * @param nouveauNom nouveau nom de fournisseur
+	 */
+	public void updatePrep(String ancienNom, String nouveauNom) {
+		try {
+			PreparedStatement insertStatement = connection.prepareStatement("UPDATE fournisseur SET Nom =? WHERE Nom=?");
+			insertStatement.setString (1, ancienNom);
+			insertStatement.setString (2, nouveauNom);
+			insertStatement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
 }
