@@ -29,13 +29,28 @@
 				<directory>src/main/resources</directory>
 				<filtering>true</filtering>
 			</resource>
-		</resources>	
+		</resources>
 	</build>
 	<dependencies>
+		<dependency>
+			<groupId>org.mariadb.jdbc</groupId>
+			<artifactId>mariadb-java-client</artifactId>
+			<version>2.5.0</version>
+		</dependency>
+		<dependency>
+		<groupId>com.mchange</groupId>
+		<artifactId>c3p0</artifactId>
+		<version>0.9.5.4</version>
+		</dependency>
+		
+	</dependencies>
+	<dependencyManagement>
+		<dependencies>
 			<dependency>
-				<groupId>org.mariadb.jdbc</groupId>
-				<artifactId>mariadb-java-client</artifactId>
-				<version>2.5.0</version>
+				<groupId>com.oracle</groupId>
+				<artifactId>ojdbc8</artifactId>
+				<version>19.3</version>
 			</dependency>
 		</dependencies>
+	</dependencyManagement>
 </project>

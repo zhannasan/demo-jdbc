@@ -1,8 +1,10 @@
 package fr.diginamic.utils;
 
 import java.sql.Connection;
+import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Enumeration;
 import java.util.ResourceBundle;
 import java.util.Set;
 
@@ -15,22 +17,33 @@ public class ConnectDB {
 	private static Connection connection;
 
 	
-	static boolean connected(Boolean b){
-		//TODO redo with checking if class is initialized and not by imposing
-		if (b == false) {
-			try {
-				Class.forName(driver);
-			} catch (ClassNotFoundException e) {
-				e.getStackTrace();
-				System.out.println("Class Driver not found");
-			}
-			return true;
-		}return false;
-		
-	}
+	static boolean loaded(String driver){
+		    boolean isLoaded = false;
+		    Enumeration<Driver> loadedDrivers = DriverManager.getDrivers(); 
+		    while(loadedDrivers.hasMoreElements()){     
+		        Driver loadDriver = loadedDrivers.nextElement();
+		        if(loadDriver.getClass().getName().equals(driver)){
+		        	isLoaded = true;
+		            break;
+		        }
+		        else{
+		        	try {
+						Class.forName(driver);
+						break;
+					} catch (ClassNotFoundException e) {
+						e.getStackTrace();
+						System.out.println("Class Driver not found");
+						isLoaded=false;
+					}
+		        }
+		    }
+		    return isLoaded;
+		}
+
 
 	public static Connection connectTo(String fileName) {
 		try {
+			
 			ResourceBundle myConfig = ResourceBundle.getBundle(fileName);
 			Set<String> keys = myConfig.keySet();
 
@@ -49,9 +62,9 @@ public class ConnectDB {
 					System.out.println(key + " = " + password);
 				}
 			}
-
+			System.out.println("Driver loaded: "+loaded(driver));
 			connection = DriverManager.getConnection(url, user, password);
-			connected(true);
+			
 			System.out.println("\rConnected to the database " + connection.getCatalog());
 
 		} catch (SQLException e) {
