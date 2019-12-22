@@ -5,15 +5,18 @@ import java.sql.DriverManager;
 import java.util.Enumeration;
 import java.util.List;
 
+import fr.diginamic.entites.Article;
 import fr.diginamic.entites.Fournisseur;
+import fr.diginamic.jdbc.dao.ArticleDaoJdbc;
 import fr.diginamic.jdbc.dao.FournisseurDaoJdbc;
 
 public class Test {
 
 	public static void main(String[] args) {
-		FournisseurDaoJdbc dao = new FournisseurDaoJdbc();
-		List<Fournisseur> fourn = dao.extraire();
-		System.out.println(dao.exists("Maison des Peintures"));
+		
+		
+		//System.out.println(dao.exists("FDM SA"));
+
 		/*Enumeration<Driver> loadedDrivers = DriverManager.getDrivers();
 	    
 	    while(loadedDrivers.hasMoreElements()){     

@@ -6,7 +6,8 @@ import fr.diginamic.entites.Fournisseur;
 
 public interface FournisseurDao {
 	/**
-	 * @return recupérer une liste des fournisseurs à partir d'une table de la base de données distante
+	 * @return recupérer une liste des fournisseurs 
+	 * à partir d'une table de la base de données distante
 	 */
 	List<Fournisseur> extraire();
 	/**INSERT fournisseur dans la table

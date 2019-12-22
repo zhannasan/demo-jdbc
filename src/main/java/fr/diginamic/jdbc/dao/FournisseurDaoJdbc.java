@@ -6,29 +6,31 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import fr.diginamic.entites.Fournisseur;
-import fr.diginamic.utils.ConnectDB;
+import fr.diginamic.utils.DbManager;
 
 public class FournisseurDaoJdbc implements FournisseurDao {
 	private static Statement statement;
 	private static Connection connection;
 	private static ResultSet cursor;
 
-	/**établissement de la connexion et création statement
+	/**établissement d'une connexion et création statement
 	* 
 	*/
 	public FournisseurDaoJdbc() {
 		try {
-			connection = ConnectDB.connectTo("demo-jdbc");
+			connection = DbManager.getConnection();
 			statement = connection.createStatement();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see fr.diginamic.jdbc.dao.FournisseurDao#extraire()
+	 */
 	public List<Fournisseur> extraire() {
 		ArrayList<Fournisseur> fournisseurs = new ArrayList<Fournisseur>();
 		try {
@@ -42,12 +44,17 @@ public class FournisseurDaoJdbc implements FournisseurDao {
 			for (Fournisseur f : fournisseurs) {
 				System.out.println(f.toString());
 			}
+			System.out.println("\r");
+			cursor.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return fournisseurs;
 	}
 
+	/* (non-Javadoc)
+	 * @see fr.diginamic.jdbc.dao.FournisseurDao#insert(fr.diginamic.entites.Fournisseur)
+	 */
 	public void insert(Fournisseur fournisseur) {
 		try {
 			statement.executeUpdate("INSERT INTO fournisseur (ID, Nom) values (" + fournisseur.getId() + ", '"
@@ -59,6 +66,9 @@ public class FournisseurDaoJdbc implements FournisseurDao {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see fr.diginamic.jdbc.dao.FournisseurDao#update(java.lang.String, java.lang.String)
+	 */
 	public int update(String ancienNom, String nouveauNom) {
 		try {
 			statement.executeUpdate("UPDATE fournisseur SET Nom = '" + nouveauNom + "' WHERE Nom='" + ancienNom + "'");
@@ -69,6 +79,9 @@ public class FournisseurDaoJdbc implements FournisseurDao {
 		return 0;
 	}
 
+	/* (non-Javadoc)
+	 * @see fr.diginamic.jdbc.dao.FournisseurDao#delete(fr.diginamic.entites.Fournisseur)
+	 */
 	public boolean delete(Fournisseur fournisseur) {
 		try {
 			statement.executeUpdate("DELETE FROM fournisseur WHERE Nom = '" + fournisseur.getNom() + "'");
@@ -81,26 +94,31 @@ public class FournisseurDaoJdbc implements FournisseurDao {
 	}
 
 	
+	/**
+	 * @param nomFournisseur
+	 * @return
+	 */
 	public boolean exists(String nomFournisseur) {
 		boolean exist = false;
 		try {
-			cursor = statement.executeQuery("SELECT ID, Nom FROM fournisseur");
+			cursor = statement.executeQuery("SELECT Nom FROM fournisseur");
 			while (cursor.next()) {
-				int id = cursor.getInt("ID");
 				String nom = cursor.getString("Nom");
 				if (nom.equals(nomFournisseur)) {
 					exist = true;
-				} else {
-					exist = false;
+					break;
 				}
 			}
+			cursor.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return exist;
 	}
-	 
 
+	/**Fermer cursor, statement et connexion apres utilisation 
+	 * 
+	 */
 	public static void close() {
 		try {
 			if (cursor != null) {
@@ -125,6 +143,7 @@ public class FournisseurDaoJdbc implements FournisseurDao {
 			insertStatement.setInt(1, id);
 			insertStatement.setString (2, nom);
 			insertStatement.executeUpdate();
+			connection.commit();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -137,9 +156,10 @@ public class FournisseurDaoJdbc implements FournisseurDao {
 	public boolean delete(String nom) {
 		boolean deleted = false;
 		try {
-			PreparedStatement insertStatement = connection.prepareStatement("DELETE FROM fournisseur WHERE Nom = ?");
+			PreparedStatement insertStatement = connection.prepareStatement("DELETE FROM fournisseur WHERE Nom LIKE ?");
 			insertStatement.setString (1, nom);
 			insertStatement.executeUpdate();
+			connection.commit();
 			deleted=true;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -157,10 +177,22 @@ public class FournisseurDaoJdbc implements FournisseurDao {
 			insertStatement.setString (1, nouveauNom);
 			insertStatement.setString (2, ancienNom);
 			insertStatement.executeUpdate();
+			connection.commit();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	
+	public int findIdFournisseur(String nom){
+		int idFournisseur=0;
+		try {
+			cursor = statement.executeQuery("SELECT id FROM fournisseur WHERE Nom = '"+nom+"'");
+			while (cursor.next()) {
+				idFournisseur = cursor.getInt("ID");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return idFournisseur;
+	}
 }

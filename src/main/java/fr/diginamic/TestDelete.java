@@ -15,8 +15,8 @@ public class TestDelete {
 
 	public static void main(String[] args) {
 		FournisseurDaoJdbc dao = new FournisseurDaoJdbc();
-		if(dao.exists("L'Espace Création")==true){
-			System.out.println(dao.delete("L'Espace Création"));
+		if(dao.exists("Maison de Peinture")==true){
+			System.out.println(dao.delete("Maison de Peinture"));
 			}
 		List<Fournisseur> fourn = dao.extraire();
 		dao.close();
