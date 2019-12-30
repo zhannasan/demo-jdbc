@@ -11,11 +11,16 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import fr.diginamic.entites.Article;
 import fr.diginamic.entites.Fournisseur;
+import fr.diginamic.recensement.IntegrationRecensement;
 import fr.diginamic.utils.DbManager;
 
 public class ArticleDaoJdbc implements ArticleDao{
+	private static final Logger LOG = LoggerFactory.getLogger(IntegrationRecensement.class);
 	static String fileName;
 
 	private static Statement statement;
@@ -33,7 +38,7 @@ public class ArticleDaoJdbc implements ArticleDao{
 				System.out.println("\rConnected to the database " + connection.getCatalog());
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			LOG.error(e.getMessage(), e);
 		}
 	}
 
@@ -58,7 +63,7 @@ public class ArticleDaoJdbc implements ArticleDao{
 			System.out.println("\r");
 			cursor.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			LOG.error(e.getMessage(), e);
 		}
 		return article;
 	}
@@ -75,7 +80,7 @@ public class ArticleDaoJdbc implements ArticleDao{
 			insertStatement.executeUpdate();
 			connection.commit();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			LOG.error(e.getMessage(), e);
 		}
 		
 	}
@@ -88,7 +93,7 @@ public class ArticleDaoJdbc implements ArticleDao{
 			updateStatement.executeUpdate();
 			connection.commit();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			LOG.error(e.getMessage(), e);			
 		}
 	}
 
